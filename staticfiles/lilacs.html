@@ -52,7 +52,22 @@
         <div class="safe_share">
             <a name="Safe_Share"> <h1 class="safe"> Safe Share</h1> </a>
             <div class="content1">
-              
+                <div>
+                <div id="qna-list">
+                    
+                </div>
+                </div>
+                <!-- <div>
+                    <form method="POST" action="/qna/" id="qna_form">
+                    {% csrf_token %}
+                    <label name="Queries"> Post your queries</label>
+                    <br>
+                    <input name="question" type="content" required='required'> 
+                    <br>
+                    <button type="submit" class="submit"> Submit</button>
+                    </form>
+                </div> -->
+
             </div>
         </div>
         <div class="Know_your_body">
@@ -109,8 +124,20 @@
                 <br>
                 <button type="submit" class="submit"> Submit</button>
             </form>
+              <div>
+                    <form method="POST" action="/qna/" id="qna_form">
+                    {% csrf_token %}
+                    <label name="Queries"> Post your queries</label>
+                    <br>
+                    <input name="question" type="content" required='required'> 
+                    <br>
+                    <button type="submit" class="submit"> Submit</button>
+                    </form>
+                </div>
             </div>
+            
         </div>
+        
         <footer>
             <em>
                 created by LILACS 
@@ -188,6 +215,64 @@
     // }
     const feedback_form_table = document.getElementById("feedback_form")
     feedback_form_table.addEventListener("submit", feedback_form)
+
+    const qna_list_element = document.getElementById("qna-list")
+    function loadqna(qna_element){
+        const xhr = new XMLHttpRequest()
+        const method = 'GET' //"POST"
+        const url = '/qna_list/'
+        const responseType = "json"
+
+        xhr.responseType = responseType
+        xhr.open(method, url)
+        xhr.onload = function(){
+            console.log(xhr.response)
+            const serverResponse = xhr.response
+            const listedItems = serverResponse
+            var finalqna = ""
+            var i;
+            for(i=0; i < listedItems.length; i++){
+                var qnaObj = listedItems[i]
+                var currentItem = qna_formatter(qnaObj)
+                finalqna += currentItem
+            }
+            qna_element.innerHTML = finalqna
+            // console.log(listedItems)
+        }
+        xhr.send()
+
+    }
+    loadqna(qna_list_element)
+    function qna_formatter(qna){
+        var formatted_qna = '<p>' + qna.question_no + '.\t' + qna.question + '<br>' + 'Ans: ' + qna.answer + '</p>'
+        return formatted_qna
+    }
+
+    function qna_form(event){
+            event.preventDefault()
+            const myForm = event.target
+            const myFormData = new FormData(myForm)
+            const url = myForm.getAttribute("action")
+            const method = myForm.getAttribute("method")
+            const xhr = new XMLHttpRequest()
+            const responseType = "json"
+
+            xhr.responseType = responseType
+            xhr.open(method, url)
+            xhr.setRequestHeader("HTTP_X_REQUESTED_WITH","XMLHttpRequest")
+            // xhr.setRequestHeader("X-Requested-With","XMLHttpRequest")
+            console.log(myFormData.entries())
+            xhr.onload = function(){
+                const serverResponse = xhr.response
+                console.log(serverResponse)
+                loadqna(qna_list_element)
+            }   
+            xhr.send(myFormData)
+            myForm.reset()
+        }
+
+    const qna_form_table = document.getElementById("qna_form")
+    qna_form_table.addEventListener("submit", qna_form)
 </script>
 </body>
 </html>
