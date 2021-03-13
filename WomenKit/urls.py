@@ -15,9 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
-from CommunityQnA import views
+from CommunityQnA import urls
+from Feedback import urls
+from django.views.generic import TemplateView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('CommunityQnA.urls'))
+    path('', TemplateView.as_view(template_name = 'lilacs.html')),
+    path('', include('CommunityQnA.urls')),
+    path('', include('Feedback.urls')),
 ]
