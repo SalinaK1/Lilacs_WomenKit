@@ -4,9 +4,6 @@
 
 - 
 
-**Find the site running on https://lilacs-womenkit.herokuapp.com/**
-- 
-
 ### To setup virtual environment, run the following commands:
 pipenv install
 
